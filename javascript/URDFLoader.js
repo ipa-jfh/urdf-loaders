@@ -52,8 +52,9 @@ class URDFLoader {
     load(pkg, urdf, cb, loadMeshCb, fetchOptions) {
 
         // normalize the path slashes
-        let path = `${pkg}/${urdf}`.replace(/\\/g, '/').replace(/\/+/g, '/')
-        path = this.manager.resolveURL(path);
+        // let path = `${pkg}/${urdf}`.replace(/\\/g, '/').replace(/\/+/g, '/')
+        // path = this.manager.resolveURL(path);
+        let path = urdf
 
         fetch(path, fetchOptions)
             .then(res => res.text())
@@ -179,6 +180,8 @@ class URDFLoader {
         switch (jointType) {
             case 'fixed': break;
             case 'continuous':
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            
                 obj.urdf.limits.lower = -Infinity
                 obj.urdf.limits.upper = Infinity
 
@@ -274,7 +277,7 @@ class URDFLoader {
                             linkObj.add(obj)
 
                             obj.position.set(xyz[0], xyz[1], xyz[2])
-                            obj.rotation.set(0,0,0)
+                            obj.rotation.set(0,0,0)                            
                             obj.scale.set(scale[0], scale[1], scale[2])
                             this._applyRotation(obj, rpy)
                         }
@@ -323,6 +326,8 @@ class URDFLoader {
                 }
             } else if(type === 'origin') {
                 xyz = this._processTuple(n.getAttribute('xyz'))
+                console.log("xyz", n, xyz);
+                
                 rpy = this._processTuple(n.getAttribute('rpy'))
             } else if(type === 'material') {
                 this.forEach(n.children, c => {
