@@ -180,7 +180,6 @@ class URDFLoader {
         switch (jointType) {
             case 'fixed': break;
             case 'continuous':
-            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             
                 obj.urdf.limits.lower = -Infinity
                 obj.urdf.limits.upper = Infinity
@@ -326,7 +325,6 @@ class URDFLoader {
                 }
             } else if(type === 'origin') {
                 xyz = this._processTuple(n.getAttribute('xyz'))
-                console.log("xyz", n, xyz);
                 
                 rpy = this._processTuple(n.getAttribute('rpy'))
             } else if(type === 'material') {
