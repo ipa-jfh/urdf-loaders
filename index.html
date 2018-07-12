@@ -6,12 +6,12 @@
         <title>URDF Viewer Example</title>
 
         <link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet">
-        <script src="https://rawgit.com/webcomponents/webcomponentsjs/master/webcomponents-lite.js"></script>
+        <script src="https://rawgit.com/webcomponents/webcomponentsjs/v1.1.0/webcomponents-lite.js"></script>
         <script src="https://threejs.org/build/three.min.js"></script>
         <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
         <script src="https://threejs.org/examples/js/loaders/STLLoader.js"></script>
-        <script src="https://rawgit.com/gkjohnson/urdf-loaders/dev/fetch-options/javascript/URDFLoader.js"></script>
-        <script src="https://rawgit.com/gkjohnson/urdf-loaders/dev/fetch-options/javascript/urdf-viewer-element.js"></script>
+        <script src="https://raw.githubusercontent.com/ipa-jfh/urdf-loaders/multiPkg/javascript/URDFLoader.js"></script>
+        <script src="https://raw.githubusercontent.com/gkjohnson/urdf-loaders/master/javascript/urdf-viewer-element.js"></script>
         <script>
             customElements.define('urdf-viewer', URDFViewer)
         </script>
@@ -59,12 +59,16 @@
     </head>
     <body>
         <ul id="urdf-options">
-            <li urdf="T12/urdf/T12.URDF" color="#E91E63">ATHLETE</li>
+            <li urdf="https://github.com/gkjohnson/urdf-loaders/files/2187557/multipkg_test.txt" color="#E91E63">ATHLETE</li>
             <li urdf="TriATHLETE/urdf/TriATHLETE.URDF" color="#009688">TriATHLETE</li>
             <li urdf="TriATHLETE_Climbing/urdf/TriATHLETE.URDF" color="#FFB300">TriATHLETE Climbing</li>
         </ul>
 
-        <urdf-viewer package="https://raw.githubusercontent.com/gkjohnson/urdf-loaders/master/urdf" up="+Z" display-shadow></urdf-viewer>
+        <urdf-viewer package="https://raw.githubusercontent.com/ros-industrial-consortium/godel/kinetic-devel/godel_robots/blending_end_effector,
+                              https://raw.githubusercontent.com/ros-industrial/abb_experimental/kinetic-devel/abb_irb1200_support,
+                              https://raw.githubusercontent.com/ros-industrial-consortium/godel/kinetic-devel/godel_robots/abb/godel_irb1200/godel_irb1200_support
+                              https://raw.githubusercontent.com/gkjohnson/urdf-loaders/master/urdf/T12"
+                     up="+Z" display-shadow></urdf-viewer>
 
         <script>
             const vw = document.querySelector('urdf-viewer')
