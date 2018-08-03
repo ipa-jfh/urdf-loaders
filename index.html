@@ -2,123 +2,88 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta charset="utf-8"/>
 
         <title>URDF Viewer Example</title>
-
-        <link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet">
         <script src="https://rawgit.com/webcomponents/webcomponentsjs/v1.1.0/webcomponents-lite.js"></script>
         <script src="https://threejs.org/build/three.min.js"></script>
         <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+        <script src="https://threejs.org/examples/js/loaders/GLTFLoader.js"></script>
+        <script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
         <script src="https://threejs.org/examples/js/loaders/STLLoader.js"></script>
         <script src="https://threejs.org/examples/js/loaders/ColladaLoader.js"></script>
+        <script src="https://rawgit.com/gkjohnson/threejs-model-loader/ModelLoader.js"></script>
         <script src="https://rawgit.com/ipa-jfh/urdf-loaders/multiPkg/javascript/URDFLoader.js"></script>
         <script src="https://rawgit.com/gkjohnson/urdf-loaders/master/javascript/urdf-viewer-element.js"></script>
+        <script src="https://rawgit.com/gkjohnson/urdf-loaders/master/javascript/urdf-manipulator-element.js"></script>
         <script>
-            customElements.define('urdf-viewer', URDFViewer)
+            /* globals URDFViewer */
+            customElements.define('urdf-viewer', URDFManipulator)
         </script>
 
-        <style type="text/css">
-            html, body, urdf-viewer {
-                padding: 0;
-                margin: 0;
-                height: 100%;
-                width: 100%;
-                overflow: hidden;
-            }
-
-            body {
-                font-family: "Roboto", helvetica, arial, sans-serif;
-                animation: fade 3s ease;
-                color: white;
-                user-select: none;
-            }
-
-            ul {
-                list-style: none;
-                position: absolute;
-                top: 0;
-                left: 0;
-                padding: 0;
-                margin: 20px;
-                font-size: 30px;
-            }
-
-            li {
-                cursor: pointer;
-                opacity: 0.4;
-            }
-
-            li:hover {
-                opacity: 0.75;
-            }
-
-            @keyframes fade {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-        </style>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300" rel="stylesheet"/>
+        <link href="./styles.css" rel="stylesheet" />
     </head>
-    <body>
-        <ul id="urdf-options">
-            <li urdf="./multipkg_test.urdf" color="#ff9a9a">MultiPkgTest</li>
-            <li urdf="https://rawgit.com/ipa-jfh/urdf-loaders/master/urdf/T12/urdf/T12.URDF" color="#E91E63">ATHLETE</li>
-            <li urdf="https://rawgit.com/ipa-jfh/urdf-loaders/master/urdf/TriATHLETE/urdf/TriATHLETE.URDF" color="#009688">TriATHLETE</li>
-            <li urdf="https://rawgit.com/ipa-jfh/urdf-loaders/master/urdf/TriATHLETE_Climbing/urdf/TriATHLETE.URDF" color="#FFB300">TriATHLETE Climbing</li>
-        </ul>
+    <body tabindex="0">
 
-        <urdf-viewer package="https://raw.githubusercontent.com/gkjohnson/urdf-loaders/master/urdf,
-                              https://raw.githubusercontent.com/ros-industrial-consortium/godel/kinetic-devel/godel_robots/blending_end_effector,
-                              https://raw.githubusercontent.com/ros-industrial/abb_experimental/kinetic-devel/abb_irb1200_support,
-                              https://raw.githubusercontent.com/ros-industrial-consortium/godel/kinetic-devel/godel_robots/abb/godel_irb1200/godel_irb1200_support"
-                     up="+Z" display-shadow></urdf-viewer>
+        <div id="menu">
+            <ul id="urdf-options">
+                <li urdf="https://raw.githubusercontent.com/ipa-jfh/urdf-loaders/gh-pages/multipkg_test.urdf" color="#E91E63">ATHLETE</li>
+                <li urdf="https://raw.githubusercontent.com/gkjohnson/urdf-loaders/master/urdf/TriATHLETE/urdf/TriATHLETE_flipped.URDF" color="#009688">TriATHLETE</li>
+                <li urdf="https://raw.githubusercontent.com/gkjohnson/urdf-loaders/master/urdf/TriATHLETE_Climbing/urdf/TriATHLETE_flipped.URDF" color="#FFB300">TriATHLETE Climbing</li>
+            </ul>
 
+            <!-- <li urdf="https://raw.githubusercontent.com/gkjohnson/urdf-loaders/master/urdf/T12/urdf/T12.URDF" color="#E91E63">ATHLETE</li> -->
+
+            <div id="controls" class="hidden">
+                <div id="toggle-controls"></div>
+                <div>Drag and drop a set of URDF files! <br/> (Chrome Only)</div>
+                <div id="ignore-joint-limits" class="toggle">Ignore Joint Limits</div>
+                <div id="do-animate" class="toggle checked">Animate Joints</div>
+                <label>
+                    Up Axis
+                    <select id="up-select">
+                        <option value="+X">+X</option>
+                        <option value="-X">-X</option>
+                        <option value="+Y">+Y</option>
+                        <option value="-Y">-Y</option>
+                        <option value="+Z">+Z</option>
+                        <option value="-Z" selected>-Z</option>
+                    </select>
+                </label>
+                <ul></ul>
+            </div>
+        </div>
+        <urdf-viewer package="blending_end_effector: https://raw.githubusercontent.com/ros-industrial-consortium/godel/kinetic-devel/godel_robots/blending_end_effector,
+        abb_irb1200_support: https://raw.githubusercontent.com/ros-industrial/abb_experimental/kinetic-devel/abb_irb1200_support,
+        godel_irb1200_support: https://raw.githubusercontent.com/ros-industrial-consortium/godel/kinetic-devel/godel_robots/abb/godel_irb1200/godel_irb1200_support"
+                      up="+Z" display-shadow tabindex="0"></urdf-viewer>
+<!-- "https://raw.githubusercontent.com/gkjohnson/urdf-loaders/master/urdf/T12" -->
+
+
+        <script src="./index.js"></script>
+        <script src="./dragAndDrop.js"></script>
         <script>
-            const vw = document.querySelector('urdf-viewer')
-            const DEG2RAD = Math.PI / 180
+            /* eslint-disable */
+            /* globals viewer animToggle */
+            document.querySelectorAll('#urdf-options li[urdf]').forEach(el => {
 
-            const lerp = (from, to, ratio) => from + (to - from) * ratio
-
-            const updateAngles = () => {
-                if (!vw.setAngle) return
-
-                const time = Date.now() / 3e2
-                for(let i = 1; i <= 6; i ++) {
-                    const offset = i * Math.PI / 3
-                    const ratio = Math.max(0, Math.sin(time + offset))
-
-                    vw.setAngle(`HP${i}`, lerp(30, 0, ratio) * DEG2RAD)
-                    vw.setAngle(`KP${i}`, lerp(90, 150, ratio) * DEG2RAD)
-                    vw.setAngle(`AP${i}`, lerp(-30, -60, ratio) * DEG2RAD)
-                }
-
-                const ratio = Math.sin(time) / 2 + 0.5
-            }
-
-            const _do = () => {
-                updateAngles()
-                requestAnimationFrame(_do)
-            }
-
-            document.querySelectorAll('li[urdf]').forEach(el => {
                 el.addEventListener('click', e => {
-                    const urdf = e.target.getAttribute('urdf')
-                    const color = e.target.getAttribute('color')
 
-                    vw.urdf = urdf
-                    document.body.style.backgroundColor = color
-                })
-            })
+                    const urdf = e.target.getAttribute('urdf');
+                    const color = e.target.getAttribute('color');
 
-            document.addEventListener('WebComponentsReady', () => {
-                vw.addEventListener('urdf-processed', e => updateAngles())
-                document.querySelector('li[urdf]').dispatchEvent(new Event('click'))
+                    viewer.up = '+Z';
+                    document.getElementById('up-select').value = viewer.up;
+                    viewer.urdf = urdf;
+                    animToggle.classList.add('checked');
+                    setColor(color);
 
-                if (/javascript\/example\/build/i.test(window.location)) {
-                    vw.package = '../../../urdf'
-                }
+                });
 
-                _do()
-            })
+            });
+
+            document.addEventListener('WebComponentsReady', () => viewer.camera.position.set(-5.5, 3.5, 5.5));
         </script>
     </body>
 </html>
