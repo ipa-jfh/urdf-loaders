@@ -79,7 +79,9 @@
 
                     const urdf = e.target.getAttribute('urdf');
                     const color = e.target.getAttribute('color');
-
+                    const package = e.target.getAttribute('package');
+                    
+                    viewer.package = package
                     viewer.up = '+Z';
                     document.getElementById('up-select').value = viewer.up;
                     viewer.urdf = urdf;
